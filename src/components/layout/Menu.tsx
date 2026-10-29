@@ -43,7 +43,7 @@ export function Menu({ open, onClose }: { open: boolean; onClose: () => void }) 
           animate={{ clipPath: "inset(0% 0% 0% 0%)", transition: { duration: 0.9, ease } }}
           exit={{ clipPath: "inset(100% 0% 0% 0%)", transition: { duration: 0.8, ease, delay: 0.15 } }}
         >
-          <div className="gutter flex min-h-full flex-col pb-8 pt-[calc(var(--header-h)+1.5rem)]">
+          <div className="gutter flex min-h-full flex-col pb-8 pt-[calc(var(--header-h)_+_1.5rem)]">
             <nav aria-label="Menu" className="flex-1">
               <ul>
                 {menuGroups.map((g, i) => {

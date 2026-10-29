@@ -157,7 +157,7 @@ export function Services() {
         onMouseLeave={() => setActive(null)}
         // `isolate`: cards juggle z-index up to 1000 among themselves — keep that inside the wheel so they
         // never paint over the header or the custom cursor's "Drag" disc
-        className="relative isolate mt-[clamp(1.5rem,3vw,2.5rem)] h-[calc(min(64vw,20rem)*1.6+9rem)] cursor-grab touch-pan-y select-none active:cursor-grabbing sm:h-[calc(min(40vw,20rem)*1.6+8rem)] lg:h-[calc(min(19vw,20rem)*1.6+9rem)] [&.is-dragging_a]:pointer-events-none"
+        className="relative isolate mt-[clamp(1.5rem,3vw,2.5rem)] h-[calc(min(64vw,20rem)*1.6_+_9rem)] cursor-grab touch-pan-y select-none active:cursor-grabbing sm:h-[calc(min(40vw,20rem)*1.6_+_8rem)] lg:h-[calc(min(19vw,20rem)*1.6_+_9rem)] [&.is-dragging_a]:pointer-events-none"
       >
         {/* Drag affordance — visible on touch too, where there's no custom cursor */}
         <p

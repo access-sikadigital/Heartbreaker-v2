@@ -117,7 +117,7 @@ export function ScrollBar() {
         >
           <span
             ref={label}
-            className={`label pointer-events-none absolute right-[calc(100%+0.6rem)] top-1/2 -translate-y-1/2 bg-chilli px-1.5 py-0.5 !text-[0.5625rem] tabular-nums text-paper transition-[opacity,transform] duration-300 ${
+            className={`label pointer-events-none absolute right-[calc(100%_+_0.6rem)] top-1/2 -translate-y-1/2 bg-chilli px-1.5 py-0.5 !text-[0.5625rem] tabular-nums text-paper transition-[opacity,transform] duration-300 ${
               active ? "translate-x-0 opacity-100" : "translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100"
             }`}
           >

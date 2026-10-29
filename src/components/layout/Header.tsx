@@ -51,11 +51,20 @@ export function Header() {
       lastY.current = y;
     };
     update();
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
+    // elementsFromPoint is a hit-test; batch scroll events into one per frame
+    let raf = 0;
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(() => {
+        raf = 0;
+        update();
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     return () => {
-      window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
   }, [pathname]);
 
@@ -144,7 +153,7 @@ export function Header() {
           <div
             onMouseLeave={closeMega}
             className={`relative border transition-[background-color,border-color,box-shadow] duration-500 ${
-              panel ? "border-maroon/12 bg-paper/85 shadow-[0_12px_40px_-18px_rgba(38,38,38,0.35)] backdrop-blur-xl" : "border-transparent bg-transparent"
+              panel ? "border-maroon/12 bg-paper/92 shadow-[0_12px_40px_-18px_rgba(38,38,38,0.35)] backdrop-blur-md" : "border-transparent bg-transparent"
             }`}
           >
             <div className={`grid h-[4.25rem] grid-cols-[1fr_auto] items-center gap-6 transition-[color,padding] duration-500 lg:grid-cols-[1fr_auto_1fr] ${floating ? "px-[calc(var(--gutter)*0.6)]" : "gutter"} ${tone}`}>
@@ -215,7 +224,7 @@ export function Header() {
                         <motion.div
                           id="more-panel"
                           onMouseEnter={openMore}
-                          className="absolute left-1/2 top-[calc(100%+1.1rem)] w-[22rem] -translate-x-1/2 border border-maroon/12 bg-paper p-2 text-maroon shadow-[0_30px_60px_-30px_rgba(38,38,38,0.45)]"
+                          className="absolute left-1/2 top-[calc(100%_+_1.1rem)] w-[22rem] -translate-x-1/2 border border-maroon/12 bg-paper p-2 text-maroon shadow-[0_30px_60px_-30px_rgba(38,38,38,0.45)]"
                           initial={{ clipPath: "inset(0% 0% 100% 0%)" }}
                           animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
                           exit={{ clipPath: "inset(0% 0% 100% 0%)" }}

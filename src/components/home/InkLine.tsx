@@ -30,11 +30,12 @@ export function InkLine({ className = "" }: { className?: string }) {
     let dpr = 1;
     let raf = 0;
     let visible = true;
+    let cleared = false;
     let lastPointer = -Infinity;
     let seed = Math.random() * 1000;
 
     const resize = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dpr = Math.min(window.devicePixelRatio || 1, 1.25); // a soft glowing line doesn't need retina pixels
       const r = host.getBoundingClientRect();
       w = r.width;
       h = r.height;
@@ -78,6 +79,8 @@ export function InkLine({ className = "" }: { className?: string }) {
       if (!visible) return;
       if (now - lastPointer > IDLE) auto(now);
       while (pts.length && now - pts[0].t > LIFE) pts.shift();
+      if (!pts.length && cleared) return;
+      cleared = pts.length === 0;
 
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);

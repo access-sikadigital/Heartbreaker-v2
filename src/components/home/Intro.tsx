@@ -94,7 +94,7 @@ export function Intro() {
         <div aria-hidden className="select-none">
           {rows.map((row, i) => (
             <div key={i} className="overflow-hidden whitespace-nowrap">
-              <div data-row data-dir={row.dir} className={`display flex w-max items-center text-[15vw] !leading-[0.84] md:text-[clamp(2.75rem,10.6vw,12.5rem)] ${row.cls}`}>
+              <div data-row data-dir={row.dir} className={`display flex w-max items-center will-change-transform [backface-visibility:hidden] text-[15vw] !leading-[0.84] md:text-[clamp(2.75rem,10.6vw,12.5rem)] ${row.cls}`}>
                 {Array.from({ length: 4 }).flatMap((_, k) =>
                   row.words.map((w, j) => (
                     <span key={`${k}-${j}`} className="flex items-center">

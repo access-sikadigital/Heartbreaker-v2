@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRef } from "react";
+import { AutoVideo } from "@/components/ui/AutoVideo";
 import { Button } from "@/components/ui/Button";
 import { cta, home } from "@/content/site";
 import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
@@ -10,10 +11,10 @@ import { InkLine } from "./InkLine";
 
 /** Studio reels (Zaya guest spot campaign), trimmed before their end cards. */
 const reels = [
-  { src: "/video/reel-reveals.mp4", poster: "/video/reel-reveals.jpg", label: "Fresh · Forearm", drift: -10 },
+  { src: "/video/reel-reveals.mp4", poster: "/video/reel-reveals.jpg", label: "Fresh · Forearm" },
   // centre column — also the only reel shown on phones
-  { src: "/video/reel-back.mp4", poster: "/video/reel-back.jpg", label: "Floral · Back", drift: 8 },
-  { src: "/video/reel-spine.mp4", poster: "/video/reel-spine.jpg", label: "Script · Spine", drift: -14 },
+  { src: "/video/reel-back.mp4", poster: "/video/reel-back.jpg", label: "Floral · Back" },
+  { src: "/video/reel-spine.mp4", poster: "/video/reel-spine.jpg", label: "Script · Spine" },
 ];
 
 const mobileChips = [
@@ -43,8 +44,9 @@ export function Hero() {
       const intro = gsap.timeline({ paused: true, defaults: { ease: "hb.out" } });
 
       intro
-        .fromTo("[data-col]", { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.5, ease: "hb.inOut", stagger: 0.12 }, 0)
-        .fromTo("[data-col] video", { scale: 1.35 }, { scale: 1, duration: 2.2, stagger: 0.12 }, 0)
+        // curtains lift off each column (transform only — clip-path on video re-rasterises every frame)
+        .fromTo("[data-curtain]", { scaleY: 1 }, { scaleY: 0, duration: 1.5, ease: "hb.inOut", stagger: 0.12 }, 0)
+        .fromTo("[data-reel]", { scale: 1.3 }, { scale: 1.08, duration: 2.2 }, 0)
         .fromTo("[data-rule]", { scaleY: 0 }, { scaleY: 1, duration: 1.6, ease: "hb.inOut", stagger: 0.1 }, 0.3)
         .from("[data-char]", { yPercent: 115, rotate: 8, duration: 1.1, stagger: 0.028 }, 0.7)
         .from("[data-rise]", { yPercent: 110, duration: 1.1, stagger: 0.08 }, 1.25)
@@ -54,15 +56,13 @@ export function Hero() {
       const stop = onIntroDone(() => intro.play());
       if (reduce) return stop;
 
-      // Scroll: columns drift at different speeds, the type lifts away
+      // Scroll: the reels drift down behind the type as it lifts away
       const tl = gsap.timeline({
         defaults: { ease: "none" },
         scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true },
       });
-      root.current!.querySelectorAll<HTMLElement>("[data-col]").forEach((col) => {
-        tl.to(col, { yPercent: Number(col.dataset.drift) }, 0);
-      });
-      tl.to("[data-shade]", { opacity: 1 }, 0).to("[data-lift]", { y: () => -window.innerHeight * 0.2, autoAlpha: 0, stagger: 0.04 }, 0);
+      tl.to("[data-reel]", { yPercent: 10 }, 0)
+        .to("[data-shade]", { opacity: 1 }, 0).to("[data-lift]", { y: () => -window.innerHeight * 0.2, autoAlpha: 0, stagger: 0.04 }, 0);
 
       return stop;
     },
@@ -71,36 +71,38 @@ export function Hero() {
 
   return (
     <section ref={root} data-header="dark" className="relative h-[100svh] min-h-[640px] overflow-hidden bg-ink text-paper" aria-labelledby="hero-title">
-      {/* ── Three-column reel grid (one column on phones) */}
-      <div className="absolute inset-0 grid grid-cols-1 md:grid-cols-3">
-        {reels.map((r, i) => (
-          <div key={r.src} data-col data-drift={r.drift} className={`relative -my-[8%] overflow-hidden ${i === 1 ? "" : "hidden md:block"}`}>
-            <video
-              className="absolute inset-0 h-full w-full object-cover"
-              src={r.src}
-              poster={r.poster}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload={i === 1 ? "auto" : "metadata"}
-              aria-hidden
-            />
-            <span className="label absolute left-4 top-[calc(8%+var(--header-h)+3rem)] hidden text-paper/75 md:block">
-              {String(i + 1).padStart(2, "0")} — {r.label}
-            </span>
+      {/* ── Reels. Desktop: ONE side-by-side video of all three (one decoder instead of three — the difference
+          between 30 and 60fps). The frame keeps the video's aspect while covering the hero, so the column
+          rules and labels always sit exactly on the seams. Phones: just the centre reel. */}
+      <div className="absolute inset-0 hidden overflow-hidden [container-type:size] md:block">
+        <div
+          data-reel
+          className="absolute left-1/2 top-1/2 aspect-[1620/960] w-[max(100cqw,calc(100cqh*1.6875))] -translate-x-1/2 -translate-y-1/2 will-change-transform"
+        >
+          <AutoVideo className="absolute inset-0 h-full w-full" src="/video/reels-triptych.mp4" poster="/video/reels-triptych.jpg" preload="auto" aria-hidden />
+          <div aria-hidden className="absolute inset-0 grid grid-cols-3">
+            {reels.map((r, i) => (
+              <div key={r.src} className="relative">
+                <span data-curtain className="absolute inset-0 origin-top bg-ink will-change-transform" />
+                <span className="label absolute left-[calc(12%_+_0.5rem)] top-[calc(50%_-_50cqh_+_var(--header-h)_+_5.5rem)] text-paper/80">
+                  {String(i + 1).padStart(2, "0")} — {r.label}
+                </span>
+              </div>
+            ))}
           </div>
-        ))}
+          <span data-rule className="absolute inset-y-0 left-1/3 w-px origin-top bg-paper/35" />
+          <span data-rule className="absolute inset-y-0 left-2/3 w-px origin-bottom bg-paper/35" />
+        </div>
       </div>
-
-      {/* Fine-line column rules */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 hidden md:block">
-        <span data-rule className="absolute inset-y-0 left-1/3 w-px origin-top bg-paper/35" />
-        <span data-rule className="absolute inset-y-0 left-2/3 w-px origin-bottom bg-paper/35" />
+      <div className="absolute inset-0 overflow-hidden md:hidden">
+        <div data-reel className="absolute inset-0 will-change-transform">
+          <AutoVideo className="absolute inset-0 h-full w-full object-cover" src={reels[1].src} poster={reels[1].poster} preload="auto" aria-hidden />
+          <span data-curtain className="absolute inset-0 origin-top bg-ink will-change-transform" />
+        </div>
       </div>
 
       {/* ── Overlay: maroon wash + depth */}
-      <div aria-hidden className="absolute inset-0 bg-maroon/55 mix-blend-multiply" />
+      <div aria-hidden className="absolute inset-0 bg-[rgba(48,6,6,0.55)]" />
       <div aria-hidden className="absolute inset-0 bg-gradient-to-b from-ink/50 via-ink/10 to-ink/85" />
       <div aria-hidden data-shade className="absolute inset-0 bg-maroon-deep/70 opacity-0" />
 
@@ -139,10 +141,10 @@ export function Hero() {
         <h2 aria-label={`${lineA} ${lineB}`} className="display pointer-events-none select-none text-[12.2vw] !leading-[0.9] md:text-[clamp(2.4rem,9.4vw,11.5rem)]">
           {/* Side padding + matching negative margin: the mask keeps its rise animation without
               shaving off glyphs (and the outline stroke) that sit past the text box edge, like the F */}
-          <span data-lift aria-hidden className="-mx-[0.08em] block overflow-hidden px-[0.08em] pb-[0.04em]">
-            {chars(lineA, "[filter:url(#hb-outline)]")}
+          <span data-lift aria-hidden className="-mx-[0.08em] block overflow-hidden px-[0.08em] pb-[0.04em] will-change-transform">
+            <span className="block [filter:url(#hb-outline)]">{chars(lineA, "")}</span>
           </span>
-          <span data-lift aria-hidden className="-mx-[0.08em] block overflow-hidden px-[0.08em] pb-[0.04em]">
+          <span data-lift aria-hidden className="-mx-[0.08em] block overflow-hidden px-[0.08em] pb-[0.04em] will-change-transform">
             {chars(lineB, "")}
           </span>
         </h2>
