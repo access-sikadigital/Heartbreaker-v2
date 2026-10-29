@@ -1,0 +1,21 @@
+# deps
+/node_modules
+
+# next
+/.next/
+/out/
+/build
+next-env.d.ts
+*.tsbuildinfo
+
+# env
+.env*
+!.env.example
+
+# misc
+.DS_Store
+*.log
+.vercel
+
+# raw client brand kit (300MB+ of PDFs, PSDs, RAW photos) — lives in Dropbox, not git
+/_source/
