@@ -1,98 +1,42 @@
-"use client";
-
 import Link from "next/link";
-import { motion, useMotionValue, useSpring } from "motion/react";
-import { useRef, type PointerEvent, type ReactNode } from "react";
+import type { ReactNode } from "react";
 
-type Variant = "solid" | "outline" | "paper" | "outline-paper" | "chilli";
+type Variant = "solid" | "chilli" | "outline" | "paper" | "outline-paper";
 
 const variants: Record<Variant, string> = {
-  solid: "bg-maroon text-paper border-maroon",
-  outline: "bg-transparent text-maroon border-maroon/70 hover:border-maroon",
-  paper: "bg-paper text-maroon border-paper",
-  "outline-paper": "bg-transparent text-paper border-paper/60 hover:border-paper",
-  chilli: "bg-chilli text-paper border-chilli",
+  // Red is reserved for booking
+  // Hover darkens the red rather than going maroon, so it never disappears into a maroon section
+  chilli: "bg-chilli text-paper border-chilli hover:bg-[#b00101] hover:border-[#b00101]",
+  solid: "bg-maroon text-paper border-maroon hover:bg-maroon-deep hover:border-maroon-deep",
+  outline: "bg-transparent text-maroon border-maroon hover:bg-maroon hover:text-paper",
+  paper: "bg-paper text-maroon border-paper hover:bg-white hover:border-white",
+  "outline-paper": "bg-transparent text-paper border-paper/70 hover:bg-paper hover:text-maroon hover:border-paper",
 };
 
-// Fill that wipes up from below on hover
-const fills: Record<Variant, string> = {
-  solid: "bg-chilli",
-  outline: "bg-maroon",
-  paper: "bg-chilli",
-  "outline-paper": "bg-paper",
-  chilli: "bg-maroon",
-};
-
-const hoverText: Record<Variant, string> = {
-  solid: "group-hover:text-paper",
-  outline: "group-hover:text-paper",
-  paper: "group-hover:text-paper",
-  "outline-paper": "group-hover:text-maroon",
-  chilli: "group-hover:text-paper",
+const sizes = {
+  sm: "h-10 px-5 text-[0.75rem]",
+  md: "h-12 px-6 text-[0.8125rem]",
+  lg: "h-14 px-8 text-[0.875rem]",
 };
 
 type Props = {
   href: string;
   children: ReactNode;
   variant?: Variant;
+  size?: keyof typeof sizes;
   className?: string;
-  magnetic?: boolean;
-  size?: "sm" | "md" | "lg";
 };
 
-const sizes = {
-  sm: "h-9 px-4 text-[0.6875rem]",
-  md: "h-12 px-6 text-xs",
-  lg: "h-14 px-8 text-[0.8125rem]",
-};
-
-/** Pill-less rectangular button from the identity (hairline border, mono caps) with roll + magnetic hover. */
-export function Button({ href, children, variant = "solid", className = "", magnetic = true, size = "md" }: Props) {
-  const ref = useRef<HTMLAnchorElement>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const sx = useSpring(x, { stiffness: 220, damping: 18, mass: 0.4 });
-  const sy = useSpring(y, { stiffness: 220, damping: 18, mass: 0.4 });
-
-  const onMove = (e: PointerEvent) => {
-    if (!magnetic || e.pointerType !== "mouse" || !ref.current) return;
-    const r = ref.current.getBoundingClientRect();
-    x.set((e.clientX - (r.left + r.width / 2)) * 0.22);
-    y.set((e.clientY - (r.top + r.height / 2)) * 0.32);
-  };
-  const reset = () => {
-    x.set(0);
-    y.set(0);
-  };
-
+/** Plain rectangular button from the identity: hairline border, mono caps. External links open in a new tab. */
+export function Button({ href, children, variant = "solid", size = "md", className = "" }: Props) {
   const external = href.startsWith("http");
-
   return (
-    <motion.span style={{ x: sx, y: sy }} className="inline-block">
-      <Link
-        ref={ref}
-        href={href}
-        onPointerMove={onMove}
-        onPointerLeave={reset}
-        {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-        className={`group relative inline-flex items-center justify-center overflow-hidden border uppercase tracking-[var(--tracking-label)] transition-colors duration-500 ${sizes[size]} ${variants[variant]} ${className}`}
-      >
-        <span
-          aria-hidden
-          className={`absolute inset-0 translate-y-[101%] transition-transform duration-[650ms] ease-[var(--ease-out-expo)] group-hover:translate-y-0 ${fills[variant]}`}
-        />
-        <span className={`relative block overflow-hidden transition-colors duration-300 ${hoverText[variant]}`}>
-          <span className="block transition-transform duration-[650ms] ease-[var(--ease-out-expo)] group-hover:-translate-y-full">
-            {children}
-          </span>
-          <span
-            aria-hidden
-            className="absolute inset-0 block translate-y-full transition-transform duration-[650ms] ease-[var(--ease-out-expo)] group-hover:translate-y-0"
-          >
-            {children}
-          </span>
-        </span>
-      </Link>
-    </motion.span>
+    <Link
+      href={href}
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      className={`inline-flex items-center justify-center whitespace-nowrap border uppercase tracking-[var(--tracking-label)] transition-colors duration-200 ${sizes[size]} ${variants[variant]} ${className}`}
+    >
+      {children}
+    </Link>
   );
 }

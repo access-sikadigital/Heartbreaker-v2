@@ -18,7 +18,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     if (prefersReducedMotion()) return;
 
     const instance = new Lenis({
-      lerp: 0.085,
+      lerp: 0.14, // light touch: close to native scrolling
       wheelMultiplier: 1,
       touchMultiplier: 1.4,
       anchors: { offset: -80 },

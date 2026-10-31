@@ -8,34 +8,27 @@
   --color-paper: #f2f1ee;
   --color-paper-dim: #e7e5e0;
   --color-ink: #262626;
-  --color-ink-deep: #161616;
 
   --font-display: var(--font-bold-money), "Arial Black", sans-serif;
   --font-mono: var(--font-lenia), ui-monospace, "SFMono-Regular", Menlo, monospace;
 
   /* Identity spec: 2% tracking across headline, sub-heading, body and button styles */
   --tracking-brand: 0.02em;
-  --tracking-label: 0.14em;
-
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
-
-  --breakpoint-xs: 26rem;
+  --tracking-label: 0.12em;
 }
 
 /* ───────────── Base ───────────── */
 @layer base {
   :root {
     color-scheme: light;
-    --gutter: clamp(1rem, 3.2vw, 3rem);
-    --header-h: 4.5rem;
+    --header-h: 4.75rem;
   }
 
   html {
     -webkit-text-size-adjust: 100%;
-    text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scroll-padding-top: var(--header-h);
   }
 
   body {
@@ -43,25 +36,19 @@
     color: var(--color-maroon);
     font-family: var(--font-mono);
     letter-spacing: var(--tracking-brand);
-    font-size: 0.9375rem;
-    line-height: 1.6;
+    font-size: 1rem;
+    line-height: 1.65;
     overflow-x: clip;
   }
 
   ::selection {
-    background: var(--color-chilli);
+    background: var(--color-maroon);
     color: var(--color-paper);
   }
 
   :focus-visible {
-    outline: 1.5px solid var(--color-chilli);
+    outline: 2px solid var(--color-chilli);
     outline-offset: 3px;
-  }
-
-  img,
-  video {
-    user-select: none;
-    -webkit-user-drag: none;
   }
 }
 
@@ -80,43 +67,59 @@ html.lenis body {
   overflow: clip;
 }
 
-/* ───────────── Utilities ───────────── */
-@utility gutter {
-  padding-inline: var(--gutter);
+/* ───────────── Layout ───────────── */
+/* Centred content column used by every section */
+@utility wrap {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
 }
 
+@utility section-y {
+  padding-block: clamp(4rem, 8vw, 7rem);
+}
+
+/* ───────────── Type ───────────── */
+/* Bold Money: caps are only ~0.48em tall, so headings get tight leading and sizes that look smaller than the
+   number. It smudges below ~22px — anything smaller is set in Lenia Mono. */
 @utility display {
   font-family: var(--font-display);
   text-transform: uppercase;
   letter-spacing: var(--tracking-brand);
-  line-height: 0.86;
+  line-height: 0.74;
   font-weight: 400;
+}
+
+@utility text-h1 {
+  font-size: clamp(2.75rem, 5.8vw, 5.75rem);
+  @media (max-width: 767px) {
+    font-size: clamp(2.75rem, 12vw, 3.75rem);
+  }
+}
+@utility text-h2 {
+  font-size: clamp(2.1rem, 3.8vw, 3.75rem);
+  @media (max-width: 767px) {
+    font-size: clamp(2.1rem, 9.5vw, 2.85rem);
+  }
+}
+@utility text-h3 {
+  font-size: clamp(1.4rem, 1.7vw, 1.65rem);
+}
+/* Card titles that get a full row on phones (promises, booking steps) */
+@utility text-h3-lg {
+  font-size: clamp(1.65rem, 2.1vw, 2.1rem);
+  @media (max-width: 767px) {
+    font-size: clamp(1.75rem, 7.8vw, 2.25rem);
+  }
 }
 
 @utility label {
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  line-height: 1.3;
+  font-size: 0.75rem;
+  line-height: 1.4;
   text-transform: uppercase;
   letter-spacing: var(--tracking-label);
-}
-
-/* Fluid display scale — Bold Money is very wide, so sizes sit lower than a condensed face would. */
-@utility text-d1 {
-  font-size: clamp(2.25rem, 7.4vw, 8.5rem);
-}
-@utility text-d2 {
-  font-size: clamp(1.9rem, 5.2vw, 5.75rem);
-}
-@utility text-d3 {
-  font-size: clamp(1.45rem, 3vw, 3.25rem);
-}
-/* Smallest display size. Bold Money smudges below ~22px, so it never goes under that;
-   anything smaller should be set in Lenia Mono (identity: "headline small"). */
-/* Note: Bold Money's cap height is only 0.475em (a typical face is ~0.7), so its font-size reads
-   about a third smaller than the number suggests. Size display text with that in mind. */
-@utility text-d4 {
-  font-size: clamp(1.75rem, 2.2vw, 2.25rem);
 }
 
 /* Line-drawn icon from /public/icons, tinted with currentColor */
@@ -130,37 +133,14 @@ html.lenis body {
   -webkit-mask-size: contain;
 }
 
-/* Film grain overlay — echoes the identity's grainy, motion-blurred photography */
-.grain {
-  pointer-events: none;
-  position: fixed;
-  inset: -50%;
-  z-index: 90;
-  width: 200%;
-  height: 200%;
-  opacity: 0.07;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  animation: grain 1.2s steps(6) infinite;
-  will-change: transform;
-  contain: strict;
-}
-
-@keyframes grain {
-  0% { transform: translate(0, 0); }
-  20% { transform: translate(-6%, 4%); }
-  40% { transform: translate(4%, -8%); }
-  60% { transform: translate(-10%, -2%); }
-  80% { transform: translate(8%, 6%); }
-  100% { transform: translate(0, 0); }
-}
-
-/* Marquee fallback when JS/motion is off */
+/* Banner strip under the hero */
 @keyframes marquee {
-  to { transform: translate3d(-50%, 0, 0); }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .grain { animation: none; }
   *,
   *::before,
   *::after {
@@ -169,43 +149,4 @@ html.lenis body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-/* Returning visitors / reduced motion: no curtain (flag set pre-paint by introSkipScript) */
-html[data-intro="skip"] .hb-preloader {
-  display: none;
-}
-
-@keyframes cue {
-  0% { transform: translateY(-100%); }
-  60%, 100% { transform: translateY(200%); }
-}
-
-/* Custom scrollbar (components/ui/ScrollBar) replaces the native one on mouse devices */
-html.hb-scrollbar {
-  scrollbar-width: none;
-}
-html.hb-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-@keyframes hb-progress {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
-@keyframes nudge-l {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(-4px); }
-}
-@keyframes nudge-r {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(4px); }
-}
-
-/* SplitText line masks (SplitReveal): Bold Money's round letters (O, C, S…) bulge just past the line box,
-   so give the clip a little room and pull it back with a matching negative margin. */
-.hb-line-mask {
-  padding: 0.04em 0.08em;
-  margin: -0.04em -0.08em;
 }

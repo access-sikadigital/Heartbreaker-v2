@@ -3,11 +3,8 @@ import localFont from "next/font/local";
 import { Footer } from "@/components/layout/Footer";
 import { GlobalCta } from "@/components/layout/GlobalCta";
 import { Header } from "@/components/layout/Header";
-import { Preloader, introSkipScript } from "@/components/layout/Preloader";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
-import { Cursor } from "@/components/ui/Cursor";
-import { ScrollBar } from "@/components/ui/ScrollBar";
-import { studio } from "@/content/site";
+import { home, studio } from "@/content/site";
 import "./globals.css";
 
 const boldMoney = localFont({
@@ -27,13 +24,12 @@ const lenia = localFont({
   fallback: ["ui-monospace", "monospace"],
 });
 
-const description =
-  "Fine line tattoo studio in Mornington on the Mornington Peninsula. Small pieces, script & lettering, custom work and flash, all drawn by hand. By appointment.";
+const description = home.seo.description;
 
 export const metadata: Metadata = {
   metadataBase: new URL(studio.url),
   title: {
-    default: "Heartbreaker Ink | Fine Line Tattoo Studio, Mornington Peninsula",
+    default: home.seo.title,
     template: "%s | Heartbreaker Ink",
   },
   description,
@@ -45,7 +41,7 @@ export const metadata: Metadata = {
     locale: "en_AU",
     url: "/",
     siteName: studio.name,
-    title: "Heartbreaker Ink | Fine Line Tattoo Studio, Mornington Peninsula",
+    title: home.seo.title,
     description,
   },
   twitter: { card: "summary_large_image" },
@@ -83,7 +79,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-AU" className={`${boldMoney.variable} ${lenia.variable}`} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: introSkipScript }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
@@ -91,15 +86,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <SmoothScroll>
-          <Preloader />
           <Header />
           <main id="main">{children}</main>
           <GlobalCta />
           <Footer />
-          <Cursor />
-          <ScrollBar />
         </SmoothScroll>
-        <div aria-hidden className="grain" />
       </body>
     </html>
   );

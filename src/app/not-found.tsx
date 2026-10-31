@@ -6,13 +6,13 @@ export const metadata: Metadata = { title: "Page not found", robots: { index: fa
 
 export default function NotFound() {
   return (
-    <section data-header="dark" className="gutter flex min-h-[100svh] flex-col items-center justify-center bg-maroon text-center text-paper">
-      <Swallow className="mb-10 w-28" body="var(--color-chilli)" />
+    <section className="wrap section-y flex min-h-[70svh] flex-col items-center justify-center text-center">
+      <Swallow className="mb-10 w-24 text-maroon" body="var(--color-paper)" />
       <p className="label mb-6 opacity-70">404</p>
-      <h1 className="display text-d1">Page not found</h1>
+      <h1 className="display text-h1">Page not found</h1>
       <p className="mt-6 max-w-[26rem] text-[1.0625rem]">This one&apos;s gone. Everything else is still here.</p>
       <div className="mt-10">
-        <Button href="/" variant="paper" size="lg">
+        <Button href="/" variant="solid" size="lg">
           Back to the studio
         </Button>
       </div>

@@ -53,7 +53,7 @@ export const siteNav: NavItem[] = [
 
 const pick = (...labels: string[]) => labels.map((l) => siteNav.find((n) => n.label === l)!);
 
-export type MenuGroup = { label: string; href?: string; icon: string; children?: (NavItem & { icon: string; note?: string })[] };
+export type MenuGroup = { label: string; href?: string; icon: string; children?: (NavItem & { icon: string })[] };
 
 /** Phone / tablet menu: the sitemap folded into short groups, sitemap order kept. */
 export const menuGroups: MenuGroup[] = [
@@ -63,13 +63,13 @@ export const menuGroups: MenuGroup[] = [
     icon: "rose",
     children: [
       { label: "All fine line", href: "/fine-line-tattoos", icon: "rose" },
-      { label: "Small tattoos", href: "/fine-line-tattoos/small-tattoos", icon: "diamond", note: "From $180" },
-      { label: "Script & lettering", href: "/fine-line-tattoos/script-lettering", icon: "envelope", note: "From $180" },
-      { label: "Custom tattoos", href: "/fine-line-tattoos/custom-tattoos", icon: "panther", note: "From $220" },
-      { label: "Matching tattoos", href: "/fine-line-tattoos/couples-matching", icon: "ace", note: "From $300 for two" },
-      { label: "Flower tattoos", href: "/fine-line-tattoos/floral-botanical", icon: "rose", note: "From $200" },
-      { label: "Minimalist tattoos", href: "/fine-line-tattoos/minimalist", icon: "bolt", note: "From $180" },
-      { label: "Cover up tattoos", href: "/fine-line-tattoos/cover-ups", icon: "moth", note: "Quoted per piece" },
+      { label: "Small tattoos", href: "/fine-line-tattoos/small-tattoos", icon: "diamond" },
+      { label: "Script & lettering", href: "/fine-line-tattoos/script-lettering", icon: "envelope" },
+      { label: "Custom tattoos", href: "/fine-line-tattoos/custom-tattoos", icon: "panther" },
+      { label: "Matching tattoos", href: "/fine-line-tattoos/couples-matching", icon: "ace" },
+      { label: "Flower tattoos", href: "/fine-line-tattoos/floral-botanical", icon: "rose" },
+      { label: "Minimalist tattoos", href: "/fine-line-tattoos/minimalist", icon: "bolt" },
+      { label: "Cover up tattoos", href: "/fine-line-tattoos/cover-ups", icon: "moth" },
     ],
   },
   {
@@ -110,15 +110,18 @@ export const headerNav = {
   more: pick("FAQ", "Blog", "Aftercare", "Gift Vouchers", "Book Online", "Group Bookings", "Collabs & Events", "Join The Team"),
 };
 
-/** Service hub ("Pick where to start") — guide prices from the copy deck. */
+/**
+ * Service hub ("Pick where to start"). Decision (client, Oct 2026): no prices anywhere on the site.
+ * `audience` = who it's for (short, caps on screen); `body` = the outcome in the client's words (copy deck, Sep 2026).
+ */
 export const serviceList = [
-  { title: "Small tattoos", body: "Small, subtle, easy to place.", price: "From $180", href: "/fine-line-tattoos/small-tattoos", icon: "diamond", image: "/images/work/bow-ankle.jpg" },
-  { title: "Script & lettering", body: "Hand-drawn or set from a font.", price: "From $180", href: "/fine-line-tattoos/script-lettering", icon: "envelope", image: "/images/work/script-shoulder.jpg" },
-  { title: "Custom tattoos", body: "Your idea, drawn with you.", price: "From $220", href: "/fine-line-tattoos/custom-tattoos", icon: "panther", image: "/images/work/lion.jpg" },
-  { title: "Matching tattoos", body: "Two pieces made to go together.", price: "From $300 for two", href: "/fine-line-tattoos/couples-matching", icon: "ace", image: "/images/work/matching-hands.jpg" },
-  { title: "Flower tattoos", body: "Stems, petals and seed heads.", price: "From $200", href: "/fine-line-tattoos/floral-botanical", icon: "rose", image: "/images/work/floral-ankle.jpg" },
-  { title: "Minimalist tattoos", body: "The fewest lines that still work.", price: "From $180", href: "/fine-line-tattoos/minimalist", icon: "bolt", image: "/images/work/stars.jpg" },
-  { title: "Cover up tattoos", body: "Some old work can be reworked.", price: "Quoted per piece", href: "/fine-line-tattoos/cover-ups", icon: "moth", image: "/images/work/floral-sleeve-2.jpg" },
+  { title: "Small tattoos", audience: "First tattoos", body: "Small and easy to place. Drawn at the size it's worn, so the detail holds.", href: "/fine-line-tattoos/small-tattoos", icon: "diamond", image: "/images/work/bow-ankle.jpg" },
+  { title: "Script & lettering", audience: "Names, dates, words", body: "Hand-drawn or set from a font, spaced so it stays readable for years.", href: "/fine-line-tattoos/script-lettering", icon: "envelope", image: "/images/work/script-shoulder.jpg" },
+  { title: "Custom tattoos", audience: "A specific idea", body: "Your idea, drawn with you. Small pieces through to sleeves and back pieces.", href: "/fine-line-tattoos/custom-tattoos", icon: "panther", image: "/images/work/lion.jpg" },
+  { title: "Matching tattoos", audience: "Couples, friends, family", body: "Two designs made to go together, booked in the same session.", href: "/fine-line-tattoos/couples-matching", icon: "ace", image: "/images/work/matching-hands.jpg" },
+  { title: "Flower tattoos", audience: "Birth flowers, botanicals", body: "Drawn from real references, so it reads as the actual plant.", href: "/fine-line-tattoos/floral-botanical", icon: "rose", image: "/images/work/floral-ankle.jpg" },
+  { title: "Minimalist tattoos", audience: "Simple and clean", body: "The fewest lines that still work. Not always small.", href: "/fine-line-tattoos/minimalist", icon: "bolt", image: "/images/work/stars.jpg" },
+  { title: "Cover up tattoos", audience: "Old work", body: "Send a photo first. Some old tattoos can be reworked, some can't, and we'll tell you.", href: "/fine-line-tattoos/cover-ups", icon: "moth", image: "/images/work/floral-sleeve-2.jpg" },
 ] as const;
 
 export const cta = {
@@ -127,87 +130,146 @@ export const cta = {
   voucher: { label: "Gift a voucher", href: "/gift-vouchers" },
 };
 
+/**
+ * Home page copy deck (website-copy-system, 31 Oct 2026). Sources: client intro doc, developer copy deck (Sep 2026),
+ * Sika keyword map (4 Sep 2026), competitor teardown, official fact check. Open items are marked TO CONFIRM.
+ * Voice: direct, warm, unfussy — what the artist would say at the chair. No slogans, no superlatives.
+ */
 export const home = {
-  hero: {
-    eyebrow: "Mornington, Victoria · By appointment",
-    title: "Fine line tattoo studio on the Mornington Peninsula",
+  seo: {
+    // primary keyword: "fine line tattoo studio" + Mornington (title ≤ 60, description ≤ 155)
+    title: "Fine Line Tattoo Studio in Mornington | Heartbreaker Ink",
+    description:
+      "Fine line tattoo studio in Mornington on the Mornington Peninsula. Small tattoos, script, custom and matching work, drawn by hand. By appointment.",
   },
-  marquee: ["Bookings are open", "Fine line", "Script & lettering", "Custom", "Flash", "Drawn by hand"],
-  intro: {
-    title: "Fine line tattoo studio in Mornington.",
-    lede: "Small pieces, big custom work, and everything in between. All drawn by hand.",
-    // About page copy
-    story: [
-      "We started in one room. We're in a bigger space now with more beds and more artists, which mostly means you're not waiting as long to get in.",
-      "Thin lines are unforgiving. No shading to cover a wobble, no heavy outline to hide it. That's why the drawing takes as long as it does.",
+  hero: {
+    eyebrow: "Barkly St, Mornington · By appointment",
+    title: "Fine line tattoo studio in Mornington",
+    lede: "Small pieces, script and custom work, drawn by hand. Fine line is all we do.",
+    facts: [
+      { k: "Style", v: "Fine line only" },
+      { k: "Drawing", v: "By hand" },
+      { k: "Bookings", v: "18+ · by appointment" },
     ],
-    aside: "You don't need a concept or a reason. Plenty of good tattoos are just a shape someone liked.",
-    cta: { label: "Book in", href: "https://book.heartbreakerink.com/widget/bookings/tattoo-app" },
+    secondary: { label: "See healed work", href: "/gallery" },
+  },
+  marquee: ["Fine line", "Small tattoos", "Script & lettering", "Custom", "Matching", "Flash", "Mornington"],
+  intro: {
+    eyebrow: "The studio",
+    title: "Fine line is all we do",
+    // GEO answer-first line: who / what / where in one quotable sentence
+    lede: "Heartbreaker Ink is a fine line tattoo studio on Barkly Street in Mornington, on Victoria's Mornington Peninsula. We tattoo small pieces, script and lettering, custom work, matching tattoos and flash, by appointment.",
+    story: [
+      "Thin lines are unforgiving. There's no shading to hide a wobble, so the drawing takes as long as it does. Every design is spaced for how it will heal, not just how it looks on the day.",
+      "You don't need a concept or a reason. Plenty of good tattoos are just a shape someone liked.",
+    ],
+    aside: "Nobody here will make you feel stupid for being nervous, for asking what it costs, or for changing your mind on placement three times.",
+    asideLabel: "From the studio",
+    cta: { label: "Book a tattoo", href: "https://book.heartbreakerink.com/widget/bookings/tattoo-app" },
     more: { label: "About the studio", href: "/about" },
     promises: [
-      { title: "Drawn for you", body: "Everything is drawn for the person wearing it. Small pieces through to sleeves, backs and ribs.", icon: "swallow" },
-      { title: "Straight answers", body: "We'll tell you before you book if an idea won't hold at the size you want it.", icon: "diamond" },
-      { title: "No stupid questions", body: "Nobody here will make you feel stupid for being nervous, for asking what it costs, or for changing your mind on placement three times.", icon: "envelope" },
-      { title: "Shorter wait", body: "More beds, more artists, shorter wait. Small pieces are usually done in one short session.", icon: "bolt" },
-    ],
-    stats: [
-      { label: "Specialism", value: "Fine line" },
-      { label: "Needle", value: "Single" },
-      { label: "Drawing", value: "By hand" },
-      { label: "Studio", value: "Mornington" },
-      { label: "Bookings", value: "By appointment" },
+      { title: "Fine line only", body: "Single needle, thin lines, sized for the body it's going on. It's the only style we tattoo.", icon: "rose" },
+      { title: "A straight answer", body: "If an idea won't hold up as fine line at the size you want, we'll tell you before you book.", icon: "diamond" },
+      { title: "Drawn before the day", body: "You see your design before the appointment, so changes happen then, not in the chair.", icon: "envelope" },
+      // TO CONFIRM: number of beds / artists in the new studio
+      { title: "More beds, shorter wait", body: "The bigger studio has more beds and more artists, so you're not waiting as long to get in.", icon: "bolt" },
     ],
   },
   services: {
-    title: "What we do",
-    cta: { label: "All services", href: "/fine-line-tattoos" },
-    items: [
-      { title: "Fine line", body: "Small, large, thin, precise. Anything fine line.", href: "/fine-line-tattoos", icon: "rose", image: "/images/work/floral-sleeve.jpg" },
-      { title: "Custom", body: "Your idea, drawn with you, built to last.", href: "/fine-line-tattoos/custom-tattoos", icon: "panther", image: "/images/work/lion.jpg" },
-      { title: "Script & lettering", body: "Hand-drawn or set from a font. Words you'll keep.", href: "/fine-line-tattoos/script-lettering", icon: "envelope", image: "/images/work/script-forearm.jpg" },
-      { title: "Flash", body: "Our designs, ready to book. Pick one off the sheets.", href: "/flash", icon: "bolt", image: "/images/work/fleur.jpg" },
-    ],
+    eyebrow: "What we do",
+    title: "Pick where to start",
+    intro: "Every style here is fine line. Start with the one closest to your idea.",
+    all: { label: "All fine line services", href: "/fine-line-tattoos" },
   },
   work: {
-    title: "Our tattoos",
-    subtitle: "Healed, not fresh.",
-    cta: { label: "View the portfolio", href: "/gallery" },
-  },
-  flash: {
-    eyebrow: "Flash",
-    title: "Our designs, ready to book",
-    body: "Nothing gets retired. Old sheets still available.",
-    cta: { label: "See the flash", href: "/flash" },
+    eyebrow: "Healed work",
+    title: "Healed, not fresh",
+    subtitle: "Fine line settles as it heals, so we photograph our work weeks after the session, not on the day. This is what it actually looks like.",
+    cta: { label: "See the gallery", href: "/gallery" },
   },
   process: {
-    title: "How it works",
+    eyebrow: "Booking",
+    title: "Booking a tattoo",
     steps: [
-      // `meta` facts are from the copy deck (Contact, Custom, FAQs, Studio Policy)
-      { n: "01", title: "Send the idea", body: "References and rough placement. We'll tell you if it works.", meta: "Reply usually same day", icon: "envelope" },
-      { n: "02", title: "We draw it", body: "You see it before the day. Deposit holds the date.", meta: "Drawing sent before your appointment", icon: "diamond" },
-      { n: "03", title: "The session", body: "Chair's yours. Take breaks.", meta: "Small pieces under an hour · custom 2–4 hours", icon: "swallow" },
-      { n: "04", title: "Aftercare", body: "Written instructions and a number to text.", meta: "Free touch-ups within 3 months", icon: "anchor" },
+      // facts: copy deck (Contact, Custom, Studio Policy)
+      { n: "01", title: "Send your idea", body: "References, rough size and where it's going. You'll get a straight answer on whether it works as fine line.", meta: "Usually a reply the same day", icon: "envelope" },
+      { n: "02", title: "We draw it", body: "You see the design before your appointment. A non-refundable deposit holds the date.", meta: "48 hours' notice to move your date", icon: "diamond" },
+      { n: "03", title: "Get tattooed", body: "Stencil, placement check, then the work. Take breaks when you need them. You leave with written aftercare.", meta: "Free touch-ups within 3 months", icon: "swallow" },
     ],
+    secondary: { label: "Studio policy", href: "/studio-policy" },
   },
   events: {
-    eyebrow: "Collabs & events",
-    title: "We come to you",
-    body: "We run fine line tattoo activations at events. Corporate days, festivals, weddings and private parties.",
-    detail: "Guests pick from a set of flash designs and walk away with a real tattoo, done properly on site.",
+    eyebrow: "Events & collabs",
+    title: "Fine line tattoos at your event",
+    body: "We bring the artists, setup and equipment to corporate days, festivals, weddings and private parties.",
+    detail: "Guests pick from a set of flash designs and leave with a real tattoo, done properly on site.",
     types: [
       { label: "Corporate days", icon: "diamond" },
       { label: "Festivals", icon: "sun" },
       { label: "Weddings", icon: "rose" },
       { label: "Private parties", icon: "dice" },
     ],
-    included: "Artists, setup, all equipment and consumables, and travel. Quoted as one package rather than per tattoo.",
+    included: "Artists, setup, equipment, consumables and travel, quoted as one package rather than per tattoo.",
+    // TO CONFIRM: OK to name past activations (e.g. Vinehop 2025) as proof?
+    caption: "On site at an event",
     cta: { label: "Enquire about an event", href: "/collabs-events" },
+  },
+  faq: {
+    eyebrow: "Questions",
+    title: "Before you book",
+    intro: "The ones people ask most. Anything else, just ask.",
+  },
+  visit: {
+    eyebrow: "Finding the studio",
+    title: "On Barkly Street, Mornington",
+    rows: [
+      { k: "Address", v: "Shop 5, 53–55 Barkly St, Mornington VIC" },
+      { k: "By car", v: "About an hour from Melbourne via the Nepean Highway and Peninsula Link. Around twenty minutes from Frankston." },
+      { k: "Parking", v: "Street parking on and around Barkly Street. Allow a few extra minutes on weekends and over summer." },
+      { k: "Hours", v: "By appointment. Later sessions on request." },
+    ],
+    suburbs: "Most clients come from Mornington, Mount Eliza, Mount Martha, Somerville, Moorooduc, Tyabb and Frankston, and a fair few make the drive from Melbourne.",
   },
   reviews: {
     title: "Sent by someone",
     cta: { label: "Read more", href: "/reviews" },
   },
 };
+
+/**
+ * Home FAQ (AEO). Answers are 40–60 words, answer-first. Also rendered as FAQPage JSON-LD.
+ * Official facts checked 31 Oct 2026: Lifeblood (tattoo/piercing eligibility), Better Health Channel (tattoos).
+ * Healing advice is the studio's own aftercare guidance (copy deck), not an official health claim.
+ */
+export const faqs = [
+  {
+    q: "Does a fine line tattoo hurt?",
+    a: "It's uncomfortable rather than unbearable, and placement matters more than size. A small piece on the ribs will feel stronger than a bigger one on the forearm. Fine line uses a single needle, which most people find gentler than shading, and you can take breaks whenever you want.",
+  },
+  {
+    q: "How much does a tattoo cost?",
+    a: "It depends on size, detail, placement and how much drawing happens first. Every piece is quoted before you book, so you'll know the price before you pay the non-refundable deposit that holds your date. Send your idea and a rough size to get a quote.",
+  },
+  {
+    q: "How long does a tattoo take to heal?",
+    a: "The surface usually settles in about two weeks. The deeper layers take longer, which is why a tattoo can look healed before it's finished. While it heals, keep it clean, out of direct sun and out of pools, the ocean and spas. You'll get written aftercare on the day.",
+  },
+  {
+    q: "How old do I need to be?",
+    a: "Eighteen, with photo ID on the day. In Victoria it's illegal to tattoo anyone under 18 unless it's for medical purposes, so there are no exceptions, even with a parent there. If it's a birthday tattoo, book it for on or after the day.",
+    source: "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/tattoos",
+  },
+  {
+    q: "What if I need to reschedule?",
+    // TO CONFIRM: how the 12-month "deposit on file" rule sits with "deposit forfeited" — wording simplified here
+    a: "Give at least 48 hours' notice and you can move your date once on the same deposit. With less notice than that, the deposit is forfeited. The full details are in the studio policy, and it's worth reading before you pay.",
+  },
+  {
+    q: "Can I donate blood after getting a tattoo?",
+    a: "Yes, after a short wait. Lifeblood says that if your tattoo was done at a licensed studio in Australia, you can give plasma straight away but need to wait one week before giving blood or platelets. Rules change, so check Lifeblood before you donate.",
+    source: "https://www.lifeblood.com.au/faq/eligibility/lifestyle-and-risk-factors/tattoo-or-piercing",
+  },
+];
 
 export const globalCta = {
   eyebrow: "Bookings are open",
@@ -227,14 +289,6 @@ export const work = [
   { src: "/images/work/script-quote.jpg", alt: "Single line of fine script on a forearm", caption: "Script · Forearm" },
   { src: "/images/work/fleur.jpg", alt: "Small fine line fleur-de-lis on the ribs", caption: "Flash · Ribs" },
 ] as const;
-
-/** Brand flash motifs (from the identity's illustration suite), numbered like a flash sheet. */
-export const flashSheet = [
-  "moth", "swallow", "rose", "panther", "snake", "sun", "skull", "scorpion", "horseshoe",
-  "dice", "ace", "bolt", "anchor", "diamond", "leopard", "rocknroll", "revolver", "envelope",
-] as const;
-
-export type FlashIconName = (typeof flashSheet)[number];
 
 /**
  * TODO(before launch): replace with real Google / Instagram reviews.
